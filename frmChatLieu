@@ -1,0 +1,99 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace lancuoiiiii
+{
+    public partial class frmChatLieu : Form
+    {
+        DataTable tblcl;
+        public frmChatLieu()
+        {
+            InitializeComponent();
+        }
+
+        private void frmChatLieu_Load(object sender, EventArgs e)
+        {
+            // txtMaChatLieu.Enabled = false;
+            // buttonluu.Enabled = false;
+            load_datagrid();
+        }
+        private void load_datagrid()
+        {
+            string sql;
+            sql = "select machatlieu, tenchatlieu from tblchatlieu";
+            tblcl = lancuoiiiii.Functions.Getdatatotable(sql);
+            dataGridView1.DataSource = tblcl;
+        }
+
+        private void buttonthem_Click(object sender, EventArgs e)
+        {
+            buttonsua.Enabled = false;
+            buttonxoa.Enabled = false;
+            buttonluu.Enabled = true;
+            buttonthem.Enabled = false;
+            ResetValues();
+
+
+        }
+        private void ResetValues()
+        {
+            txtMaChatLieu.Text = "";
+            txtTenChatLieu.Text = "";
+        }
+
+        private void buttonluu_Click(object sender, EventArgs e)
+        {
+            string sql;
+            if (txtMaChatLieu.Text.Trim().Length == 0)
+            {
+                MessageBox.Show("Ban phai nhap ma chat lieu", "Thong bao",
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                txtMaChatLieu.Focus();
+                return;
+            }
+            if (txtTenChatLieu.Text.Trim().Length == 0)
+            {
+                MessageBox.Show("Ban phai nhap ten chat lieu", "Thong bao",
+
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTenChatLieu.Focus();
+                return;
+            }
+
+            sql = "SELECT MaChatlieu FROM tblChatlieu WHERE MaChatlieu = N'" +
+
+            txtMaChatLieu.Text.Trim() + " ' ";
+
+            if (Functions.Checkkey(sql))
+            {
+                MessageBox.Show("Ma chat lieu nay da co, hay nhap ma khac", "Thong bao", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                txtMaChatLieu.Focus();
+                txtMaChatLieu.Text = "";
+                return;
+            }
+            sql = "INSERT INTO tblChatlieu(Machatlieu, Tenchatlieu) VALUES(N '" +
+
+            txtMaChatLieu.Text + "',N'" + txtTenChatLieu.Text + "')";
+
+            Functions.RunSql(sql);
+
+            ResetValues();
+            buttonxoa.Enabled = true;
+            buttonthem.Enabled = true;
+            buttonsua.Enabled = true;
+            buttoncapnhat.Enabled = false;
+            buttonluu.Enabled = false;
+            txtMaChatLieu.Enabled = false;
+        }
+    }
+}
+    
